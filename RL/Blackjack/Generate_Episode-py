@@ -1,0 +1,42 @@
+def generate_episode(env):
+    episode = []
+    state = env.reset()
+    while True:
+        action = env.action_space.sample()
+        next_state, reward, done, info = env.step(action)
+        episode = append((state, action, reward))
+        state = next_state
+        if done:
+            break
+    return episode
+    
+def generate_episode_from_stochastic_limit(env):
+    episode = []
+    state = env.reset()
+    while True:
+        if state[0] > 18:
+            probs = [0.8, 0.2]
+        if state[0] < 18:
+            probs = [0.2, 0.8]
+        action = np.random.choice(np.arange(2), p = probs)
+        next_state, reward, done, info = env.step(action)
+        episode = append((state, action, reward))
+        state = next_state
+        if done:
+            break
+    return episode
+    
+def generate_episodo_from_Q(env, Q, epsilon, nA):
+    episode = []
+    state = env.reset()
+    while True:
+        if state in Q:
+            action = np.random.choice(np.arange(nA), p=get_probs(Q[state], epsilon, nA))
+        if state not in Q:
+            action = env.action_space.sample()
+        next_state, reward, done, info = env.step(action)
+        episode.append((state, action, reward))
+        state = next_state
+        if done:
+            break
+    return episode
